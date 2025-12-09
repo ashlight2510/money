@@ -347,9 +347,6 @@ function displayResult(data) {
       </div>
 
       <div class="share-buttons">
-        <button class="share-btn kakao" onclick="shareKakao()">
-          카카오톡 공유
-        </button>
         <button class="share-btn" onclick="shareLink()">
           링크 복사
         </button>
@@ -386,42 +383,6 @@ function displayResult(data) {
     } catch(e) {
       console.log('카카오 애드핏 초기화:', e);
     }
-  }
-}
-
-// 카카오톡 공유
-function shareKakao() {
-  const url = window.location.href;
-  const title = '내 자산 방탄 지수 테스트';
-  const description = '경제위기 와도 내 돈은 얼마나 버틸까?';
-  
-  // 카카오톡 JavaScript SDK 사용 (실제로는 SDK 초기화 필요)
-  if (typeof Kakao !== 'undefined' && Kakao.isInitialized()) {
-    Kakao.Share.sendDefault({
-      objectType: 'feed',
-      content: {
-        title: title,
-        description: description,
-        imageUrl: 'https://via.placeholder.com/1200x630/1a1a2e/e94560?text=내+자산+방탄+지수+테스트',
-        link: {
-          mobileWebUrl: url,
-          webUrl: url,
-        },
-      },
-      buttons: [
-        {
-          title: '테스트 하기',
-          link: {
-            mobileWebUrl: url,
-            webUrl: url,
-          },
-        },
-      ],
-    });
-  } else {
-    // SDK가 없는 경우 링크 공유로 대체
-    shareLink();
-    alert('카카오톡 공유를 사용하려면 카카오 JavaScript SDK가 필요합니다.');
   }
 }
 
