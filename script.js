@@ -7,15 +7,25 @@ let scores = {
   risk: 0,
   fundamentals: 0
 };
+let questionScores = {}; // 각 질문별로 이미 계산된 점수 추적
 
 // 페이지 로드 시 첫 질문 표시
-document.addEventListener('DOMContentLoaded', () => {
-  if (window.location.pathname.includes('result.html')) {
+function initPage() {
+  console.log('페이지 초기화, 현재 경로:', window.location.pathname, window.location.href);
+  if (window.location.pathname.includes('result.html') || window.location.href.includes('result.html')) {
     loadResult();
   } else {
     loadQuestion();
   }
-});
+}
+
+// DOM이 이미 로드된 경우와 로딩 중인 경우 모두 처리
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initPage);
+} else {
+  // 이미 로드된 경우
+  initPage();
+}
 
 // 질문 로드
 function loadQuestion() {
@@ -55,14 +65,11 @@ function loadQuestion() {
 
   container.innerHTML = html;
 
-  // 이전 답변이 있으면 선택 상태 복원
+  // 이전 답변이 있으면 선택 상태 복원 (되돌아왔을 경우)
   if (answers[question.id] !== undefined) {
     const prevChoiceIndex = answers[question.id];
     const prevChoiceId = `choice-${currentQuestionIndex}-${prevChoiceIndex}`;
     document.getElementById(prevChoiceId).classList.add('selected');
-    document.getElementById('nextBtn').disabled = false;
-  } else {
-    document.getElementById('nextBtn').disabled = true;
   }
 }
 
@@ -78,22 +85,36 @@ function selectChoice(index, choiceId) {
 
   // 선택한 항목에 selected 클래스 추가
   document.getElementById(choiceId).classList.add('selected');
-  document.getElementById('nextBtn').disabled = false;
+
+  // 이전 답변의 점수 제거 (질문을 다시 선택한 경우)
+  if (questionScores[question.id]) {
+    const prevScore = questionScores[question.id];
+    scores.defense -= prevScore.defense || 0;
+    scores.risk -= prevScore.risk || 0;
+    scores.fundamentals -= prevScore.fundamentals || 0;
+  }
 
   // 답변 저장
   answers[question.id] = index;
 
-  // 점수 업데이트
+  // 새로운 점수 계산 및 저장
   const selectedChoice = question.choices[index];
-  if (selectedChoice.value.defense) {
-    scores.defense += selectedChoice.value.defense;
-  }
-  if (selectedChoice.value.risk) {
-    scores.risk += selectedChoice.value.risk;
-  }
-  if (selectedChoice.value.fundamentals) {
-    scores.fundamentals += selectedChoice.value.fundamentals;
-  }
+  const newScore = {
+    defense: selectedChoice.value.defense || 0,
+    risk: selectedChoice.value.risk || 0,
+    fundamentals: selectedChoice.value.fundamentals || 0
+  };
+  questionScores[question.id] = newScore;
+
+  // 점수 업데이트
+  scores.defense += newScore.defense;
+  scores.risk += newScore.risk;
+  scores.fundamentals += newScore.fundamentals;
+
+  // 자동으로 다음 질문으로 이동 (짧은 딜레이 후)
+  setTimeout(() => {
+    handleNext();
+  }, 400); // 0.4초 후 자동 이동
 }
 
 // 다음 버튼
@@ -109,10 +130,14 @@ function handleNext() {
 
 // 결과 계산
 function calculateResult() {
+  console.log('결과 계산 시작', scores);
+  
   // 방탄지수 계산
   const defenseScore = Math.min(100, Math.max(0, scores.defense));
   const fundamentalsScore = Math.min(100, Math.max(0, scores.fundamentals));
   const riskScore = Math.min(100, Math.max(0, scores.risk));
+  
+  console.log('점수:', { defenseScore, fundamentalsScore, riskScore });
   
   // 방탄지수 = defense * 0.45 + fundamentals * 0.35 + (100 - risk) * 0.20
   const shieldScore = Math.round(
@@ -166,23 +191,31 @@ function calculateResult() {
     typeAdvice: typeAdvice
   };
 
-  // URL에 결과 데이터 인코딩 (간단한 방법)
-  const encodedData = btoa(JSON.stringify(resultData));
+  // URL에 결과 데이터 인코딩 (한글 지원)
+  const jsonString = JSON.stringify(resultData);
+  const encodedData = encodeURIComponent(jsonString);
+  console.log('결과 페이지로 이동:', `result.html?data=${encodedData}`);
   window.location.href = `result.html?data=${encodedData}`;
 }
 
 // 결과 페이지 로드
 function loadResult() {
+  console.log('결과 페이지 로드 시작');
   const urlParams = new URLSearchParams(window.location.search);
   const encodedData = urlParams.get('data');
   
+  console.log('URL 파라미터:', { encodedData });
+  
   if (!encodedData) {
+    console.error('결과 데이터가 없습니다');
     window.location.href = 'index.html';
     return;
   }
 
   try {
-    const resultData = JSON.parse(atob(encodedData));
+    const decodedData = decodeURIComponent(encodedData);
+    const resultData = JSON.parse(decodedData);
+    console.log('결과 데이터 파싱 성공:', resultData);
     displayResult(resultData);
   } catch (e) {
     console.error('결과 데이터 파싱 실패:', e);
