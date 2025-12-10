@@ -191,36 +191,64 @@ function calculateResult() {
     typeAdvice: typeAdvice
   };
 
-  // URL에 결과 데이터 인코딩 (한글 지원)
-  const jsonString = JSON.stringify(resultData);
-  const encodedData = encodeURIComponent(jsonString);
-  console.log('결과 페이지로 이동:', `result.html?data=${encodedData}`);
-  window.location.href = `result.html?data=${encodedData}`;
+  // localStorage에 결과 저장 (안정적인 방법)
+  try {
+    localStorage.setItem('testResult', JSON.stringify(resultData));
+    console.log('결과 저장 완료, 결과 페이지로 이동');
+    window.location.href = 'result.html';
+  } catch (e) {
+    console.error('결과 저장 실패:', e);
+    // 폴백: URL 파라미터 사용
+    const jsonString = JSON.stringify(resultData);
+    const encodedData = encodeURIComponent(jsonString);
+    window.location.href = `result.html?data=${encodedData}`;
+  }
 }
 
 // 결과 페이지 로드
 function loadResult() {
   console.log('결과 페이지 로드 시작');
-  const urlParams = new URLSearchParams(window.location.search);
-  const encodedData = urlParams.get('data');
   
-  console.log('URL 파라미터:', { encodedData });
+  let resultData = null;
   
-  if (!encodedData) {
+  // 1. localStorage에서 결과 가져오기 (우선)
+  try {
+    const savedResult = localStorage.getItem('testResult');
+    if (savedResult) {
+      resultData = JSON.parse(savedResult);
+      console.log('localStorage에서 결과 로드 성공:', resultData);
+      localStorage.removeItem('testResult'); // 사용 후 삭제
+    }
+  } catch (e) {
+    console.log('localStorage 읽기 실패:', e);
+  }
+  
+  // 2. URL 파라미터에서 결과 가져오기 (폴백)
+  if (!resultData) {
+    try {
+      const urlParams = new URLSearchParams(window.location.search);
+      const encodedData = urlParams.get('data');
+      
+      if (encodedData) {
+        const decodedData = decodeURIComponent(encodedData);
+        resultData = JSON.parse(decodedData);
+        console.log('URL 파라미터에서 결과 로드 성공:', resultData);
+      }
+    } catch (e) {
+      console.error('URL 파라미터 파싱 실패:', e);
+    }
+  }
+  
+  // 결과가 없으면 메인 페이지로 리다이렉트
+  if (!resultData) {
     console.error('결과 데이터가 없습니다');
+    alert('테스트를 먼저 완료해주세요.');
     window.location.href = 'index.html';
     return;
   }
-
-  try {
-    const decodedData = decodeURIComponent(encodedData);
-    const resultData = JSON.parse(decodedData);
-    console.log('결과 데이터 파싱 성공:', resultData);
-    displayResult(resultData);
-  } catch (e) {
-    console.error('결과 데이터 파싱 실패:', e);
-    window.location.href = 'index.html';
-  }
+  
+  // 결과 표시
+  displayResult(resultData);
 }
 
 // 결과 표시
@@ -405,6 +433,19 @@ function shareLink() {
 
 // 테스트 다시하기
 function restartTest() {
+  // 초기화
+  currentQuestionIndex = 0;
+  answers = {};
+  scores = { defense: 0, risk: 0, fundamentals: 0 };
+  questionScores = {};
+  
+  // 결과 데이터 삭제
+  try {
+    localStorage.removeItem('testResult');
+  } catch (e) {
+    console.log('localStorage 삭제 실패:', e);
+  }
+  
   window.location.href = 'index.html';
 }
 
