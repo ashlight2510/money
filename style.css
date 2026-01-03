@@ -385,14 +385,6 @@ body {
   opacity: 0.6;
 }
 
-/* 카카오 애드핏 영역 */
-.kakao_ad_area {
-  display: block !important;
-  margin: 20px auto;
-  text-align: center;
-  min-height: 250px;
-}
-
 /* 가이드 섹션 */
 .guide-section {
   background: var(--card-bg);
@@ -489,4 +481,3 @@ body {
     transform: rotate(360deg);
   }
 }
-

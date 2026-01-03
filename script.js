@@ -269,14 +269,6 @@ function displayResult(data) {
         </div>
       </div>
 
-      <!-- 광고 영역 1 (상단) -->
-      <div style="text-align: center; margin: 20px 0;">
-        <ins class="kakao_ad_area" style="display:none;"
-             data-ad-unit="DAN-eHVmT1JOh3rXNVsS"
-             data-ad-width="300"
-             data-ad-height="250"></ins>
-      </div>
-
       <div class="result-type">
         <h2>${data.typeName}</h2>
         <p class="description">${data.typeDescription}</p>
@@ -329,14 +321,6 @@ function displayResult(data) {
         </div>
       </div>
 
-      <!-- 광고 영역 2 (차트 후) -->
-      <div style="text-align: center; margin: 20px 0;">
-        <ins class="kakao_ad_area" style="display:none;"
-             data-ad-unit="DAN-eHVmT1JOh3rXNVsS"
-             data-ad-width="300"
-             data-ad-height="250"></ins>
-      </div>
-
       <div class="guide-section">
         <h3>📚 자산 관리 기본 가이드</h3>
         
@@ -366,26 +350,10 @@ function displayResult(data) {
         </div>
       </div>
 
-      <!-- 광고 영역 3 (가이드 후) -->
-      <div style="text-align: center; margin: 20px 0;">
-        <ins class="kakao_ad_area" style="display:none;"
-             data-ad-unit="DAN-eHVmT1JOh3rXNVsS"
-             data-ad-width="300"
-             data-ad-height="250"></ins>
-      </div>
-
       <div class="share-buttons">
         <button class="share-btn" onclick="shareLink()">
           링크 복사
         </button>
-      </div>
-
-      <!-- 광고 영역 4 (하단) -->
-      <div style="text-align: center; margin: 20px 0;">
-        <ins class="kakao_ad_area" style="display:none;"
-             data-ad-unit="DAN-eHVmT1JOh3rXNVsS"
-             data-ad-width="300"
-             data-ad-height="250"></ins>
       </div>
 
       <button class="btn restart-btn" onclick="restartTest()">다시 테스트하기</button>
@@ -404,14 +372,6 @@ function displayResult(data) {
     });
   }, 500);
 
-  // 카카오 애드핏 광고 초기화
-  if (typeof kakao !== 'undefined' && kakao.ad) {
-    try {
-      kakao.ad.init();
-    } catch(e) {
-      console.log('카카오 애드핏 초기화:', e);
-    }
-  }
 }
 
 // 링크 복사
@@ -448,4 +408,3 @@ function restartTest() {
   
   window.location.href = 'index.html';
 }
-
