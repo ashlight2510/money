@@ -49,14 +49,26 @@
       display: block;
       margin: 16px auto;
         text-align: center;
-}
+    }
   </style>
 </head>
-<body><div class="container">
+<body>
+  <div class="lang-switch" role="tablist" aria-label="Language switcher">
+    <button type="button" data-lang="ko" class="active">한국어</button>
+    <button type="button" data-lang="en">English</button>
+  </div>
+  <div class="container">
     <div class="header">
-      <h1>🛡️ 내 자산 방탄 지수 테스트</h1>
-      <p class="subtitle">경제위기 와도 내 돈은 얼마나 버틸까?</p>
-      <p class="description">10문항으로 알아보는 나의 자산 방어력</p>
+      <h1 data-i18n="heroTitle">🛡️ 내 자산 방탄 지수 테스트</h1>
+      <p class="subtitle" data-i18n="heroSubtitle">
+        경제위기 와도 내 돈은 얼마나 버틸까?
+      </p>
+      <p class="description" data-i18n="heroDescription">
+        10문항으로 알아보는 나의 자산 방어력
+      </p>
+      <p class="share-hint" data-i18n="shareHint">
+        링크를 복사해 친구에게 공유해보세요.
+      </p>
     </div>
 
     <div class="progress-bar">
@@ -90,7 +102,8 @@
           moreBtn.id = 'more-tests-btn';
           moreBtn.type = 'button';
           moreBtn.dataset.url = targetUrl;
-          moreBtn.textContent = '더 많은 테스트 해보기';
+          moreBtn.dataset.i18n = 'moreTestsButton';
+          moreBtn.textContent = t('moreTestsButton');
           moreBtn.className = 'w-full py-4 bg-white border border-purple-100 text-purple-700 font-semibold rounded-xl hover:bg-purple-50 hover:border-purple-200 transition-all duration-200 mt-3';
           moreBtn.addEventListener('click', function () {
             window.open(targetUrl, '_blank', 'noopener');
@@ -100,6 +113,9 @@
             shareButton.insertAdjacentElement('afterend', moreBtn);
           } else if (document.body) {
             document.body.appendChild(moreBtn);
+          }
+          if (typeof applyTranslations === 'function') {
+            applyTranslations();
           }
         }
         if (document.readyState === 'loading') {
@@ -123,4 +139,3 @@
   
 </body>
 </html>
-

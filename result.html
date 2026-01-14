@@ -49,10 +49,15 @@
 }
   </style>
 </head>
-<body><div class="container">
+<body>
+  <div class="lang-switch" role="tablist" aria-label="Language switcher">
+    <button type="button" data-lang="ko" class="active">한국어</button>
+    <button type="button" data-lang="en">English</button>
+  </div>
+  <div class="container">
     <div class="loading">
       <div class="spinner"></div>
-      <p>결과를 분석하고 있습니다...</p>
+      <p data-i18n="loadingText">결과를 분석하고 있습니다...</p>
     </div>
   </div>
 
@@ -71,4 +76,3 @@
   
 </body>
 </html>
-
