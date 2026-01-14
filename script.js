@@ -192,16 +192,14 @@ function detectLang() {
     typeof Intl === "object" && typeof Intl.DateTimeFormat === "function"
       ? Intl.DateTimeFormat().resolvedOptions().locale
       : "";
-  const sources = [
-    ...(navigator.languages || []),
-    navigator.language,
-    navigator.userLanguage,
-    intlLocale,
-  ]
-    .filter(Boolean)
-    .map((locale) => locale.toLowerCase());
-  const hasKorean = sources.some((locale) => locale.startsWith("ko"));
-  return hasKorean ? "ko" : "en";
+  const browserLang =
+    navigator.languages && navigator.languages.length
+      ? navigator.languages[0]
+      : navigator.language;
+  if (browserLang && browserLang.toLowerCase().startsWith("ko")) {
+    return "ko";
+  }
+  return defaultLang;
 }
 
 function applyTranslations() {
