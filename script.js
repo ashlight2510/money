@@ -186,10 +186,22 @@ function detectLang() {
   const urlParams = new URLSearchParams(window.location.search);
   const param = urlParams.get("lang");
   if (param && languagePacks[param]) return param;
-  const stored = localStorage.getItem("money_lang");
+  const stored = localStorage.getItem("preferredLang");
   if (stored && languagePacks[stored]) return stored;
-  const browserLang = (navigator.language || "").toLowerCase();
-  return browserLang.startsWith("en") ? "en" : "ko";
+  const intlLocale =
+    typeof Intl === "object" && typeof Intl.DateTimeFormat === "function"
+      ? Intl.DateTimeFormat().resolvedOptions().locale
+      : "";
+  const sources = [
+    ...(navigator.languages || []),
+    navigator.language,
+    navigator.userLanguage,
+    intlLocale,
+  ]
+    .filter(Boolean)
+    .map((locale) => locale.toLowerCase());
+  const hasKorean = sources.some((locale) => locale.startsWith("ko"));
+  return hasKorean ? "ko" : "en";
 }
 
 function applyTranslations() {
@@ -208,7 +220,8 @@ function applyTranslations() {
 function setLang(lang, options = {}) {
   const nextLang = languagePacks[lang] ? lang : "ko";
   currentLang = nextLang;
-  localStorage.setItem("money_lang", nextLang);
+  document.documentElement.lang = nextLang;
+  localStorage.setItem("preferredLang", nextLang);
   document
     .querySelectorAll(".lang-switch button")
     .forEach((button) =>
@@ -236,7 +249,7 @@ function getQuestionSet() {
 function initLanguageSwitcher() {
   document.querySelectorAll(".lang-switch button").forEach((button) => {
     button.addEventListener("click", () => {
-      setLang(button.dataset.lang);
+      setLang(button.dataset.lang, { updateUrl: true });
     });
   });
 }
