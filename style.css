@@ -74,13 +74,18 @@ body {
 }
 
 .lang-switch {
+  position: fixed;
+  top: 10px;
+  right: 10px;
   display: inline-flex;
   gap: 6px;
   padding: 4px;
   border-radius: 999px;
-  background: #111827;
+  background: rgba(17, 24, 39, 0.95);
+  backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.2);
-  margin: 0 auto 14px;
+  z-index: 100;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
 .lang-switch button {
   border: none;
@@ -176,15 +181,16 @@ body {
 }
 
 .choice-item:hover {
-  background: rgba(255, 255, 255, 0.1);
-  border-color: var(--highlight-color);
+  background: rgba(102, 126, 234, 0.1);
+  border-color: #8b5cf6;
   transform: translateX(5px);
 }
 
 .choice-item.selected {
-  background: var(--gradient-1);
-  border-color: var(--highlight-color);
-  box-shadow: 0 4px 15px rgba(233, 69, 96, 0.3);
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-color: #8b5cf6;
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+  color: white;
 }
 
 /* 버튼 */
@@ -361,6 +367,21 @@ body {
   gap: 12px;
   margin: 30px 0;
   justify-content: center;
+  flex-wrap: wrap;
+}
+
+.more-tests-btn {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-color: #8b5cf6;
+  color: white;
+  font-weight: 600;
+}
+
+.more-tests-btn:hover {
+  background: linear-gradient(135deg, #5568d3 0%, #653a8f 100%);
+  border-color: #7c3aed;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
 }
 
 .share-btn {
@@ -488,6 +509,17 @@ body {
 
   .share-buttons {
     flex-direction: column;
+  }
+  
+  .lang-switch {
+    top: 8px;
+    right: 8px;
+    padding: 3px;
+  }
+  
+  .lang-switch button {
+    font-size: 10px;
+    padding: 5px 10px;
   }
 }
 

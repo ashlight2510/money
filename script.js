@@ -45,6 +45,7 @@ const languagePacks = {
     shareMessage: "내 자산 방탄 지수 테스트: https://money.funnyfunny.cloud/",
     copyAlert: "링크가 클립보드에 복사되었습니다!",
     moreTestsButton: "더 많은 테스트 해보기",
+    scoreLabel: "점",
   },
   en: {
     metaTitle: "Asset Shield Index Test",
@@ -90,6 +91,7 @@ const languagePacks = {
     shareMessage: "Check my score: https://money.funnyfunny.cloud/",
     copyAlert: "Link copied to clipboard!",
     moreTestsButton: "Try more tests",
+    scoreLabel: "points",
   },
 };
 
@@ -451,7 +453,7 @@ function displayResult(data) {
       <div class="score-circle">
         <div>
           <div class="score-value">${data.shieldScore}</div>
-          <div class="score-label">점</div>
+          <div class="score-label">${pack.scoreLabel}</div>
         </div>
       </div>
       <div class="result-type">
@@ -467,7 +469,7 @@ function displayResult(data) {
         <div class="chart-item">
           <div class="chart-label">
             <span>${pack.chartLabels.defense}</span>
-            <span>${Math.round(data.defenseScore)}점</span>
+            <span>${Math.round(data.defenseScore)}${pack.scoreLabel}</span>
           </div>
           <div class="chart-bar">
             <div class="chart-fill defense" style="width: ${data.defenseScore}%">
@@ -478,7 +480,7 @@ function displayResult(data) {
         <div class="chart-item">
           <div class="chart-label">
             <span>${pack.chartLabels.risk}</span>
-            <span>${Math.round(data.riskScore)}점</span>
+            <span>${Math.round(data.riskScore)}${pack.scoreLabel}</span>
           </div>
           <div class="chart-bar">
             <div class="chart-fill risk" style="width: ${data.riskScore}%">
@@ -489,7 +491,7 @@ function displayResult(data) {
         <div class="chart-item">
           <div class="chart-label">
             <span>${pack.chartLabels.fundamentals}</span>
-            <span>${Math.round(data.fundamentalsScore)}점</span>
+            <span>${Math.round(data.fundamentalsScore)}${pack.scoreLabel}</span>
           </div>
           <div class="chart-bar">
             <div class="chart-fill fundamentals" style="width: ${data.fundamentalsScore}%">
@@ -501,6 +503,9 @@ function displayResult(data) {
       <div class="share-buttons">
         <button class="share-btn" onclick="shareLink()">
           ${pack.shareLinkButton}
+        </button>
+        <button class="share-btn more-tests-btn" onclick="window.open('https://funnyfunny.cloud/', '_blank', 'noopener')">
+          ${pack.moreTestsButton}
         </button>
       </div>
       <button class="btn restart-btn" onclick="restartTest()">
